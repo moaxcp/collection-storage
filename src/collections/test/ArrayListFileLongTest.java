@@ -4,7 +4,7 @@
  */
 package collections.test;
 
-import collections.ArrayListFileLong;
+import collections.ListFileBufferedLong;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ArrayListFileLongTest {
         return list;
     }
     
-    public static void compareList(ArrayListFileLong test, List<Long> expected) {
+    public static void compareList(ListFileBufferedLong test, List<Long> expected) {
         System.out.println("Comparing test list with expected results.");
         if(test.size() != expected.size()) {
             System.out.println("compare failed sizes do not match");
@@ -59,11 +59,7 @@ public class ArrayListFileLongTest {
         }
     }
     
-    public static void testRecordLength(ArrayListFileLong list) {
-        System.out.println("testing recordLength " + Long.SIZE + " " + list.getRecordLength() + " " + (Long.SIZE / 8 == list.getRecordLength()));
-    }
-    
-    public static void testAddGet(ArrayListFileLong list, int count) {
+    public static void testAddGet(ListFileBufferedLong list, int count) {
         list.clear();
         
         System.out.println("testing add(long number) with ordered list");
@@ -88,9 +84,9 @@ public class ArrayListFileLongTest {
     }
     
     public static void main(String... args) {
-        ArrayListFileLong list = null;
+        ListFileBufferedLong list = null;
         try {
-            list = new ArrayListFileLong("/home/john/testList.dat");
+            list = new ListFileBufferedLong("/home/john/testList.dat");
             list.open("rw");
             list.clear();
         } catch (FileNotFoundException ex) {
@@ -98,8 +94,6 @@ public class ArrayListFileLongTest {
         } catch (IOException ex) {
             Logger.getLogger(ArrayListFileLongTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        testRecordLength(list);
         
         int count = 1 * 1024 / 8;
         

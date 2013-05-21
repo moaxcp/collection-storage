@@ -27,11 +27,10 @@ import java.io.IOException;
  *
  * @author john
  */
-public class SortedSetFileLong extends SetFileLong {
+public class SortedSetFileLong extends ListFileBufferedLong {
     
     public SortedSetFileLong(File file) throws FileNotFoundException, IOException {
         super(file);
-        recordLength = Long.SIZE / 8;
     }
     
     public SortedSetFileLong(String path) throws FileNotFoundException, IOException {

@@ -23,16 +23,16 @@ package collections;
  *
  * @author john
  */
-public class ArrayListFileException extends RuntimeException {
-    public ArrayListFileException() {
+public class ListFileException extends RuntimeException {
+    public ListFileException() {
         super();
     }
     
-    public ArrayListFileException(String msg) {
+    public ListFileException(String msg) {
         super(msg);
     }
     
-    public ArrayListFileException(Exception ex) {
+    public ListFileException(Exception ex) {
         super(ex);
     }
 }
