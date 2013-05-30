@@ -21,11 +21,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * ListFile is very similar to List. List cannot be used in these collections
  * because these collections have a long index instead of an int index.
+ * 
+ * This interface adds to List allowning for operations with other ListFiles
+ * instead of just collections. There are added indexing options to help create an
+ * index List<E> or ListFile<E> for a specific element. This can help create index
+ * files of equal items or comparable items using a comparator for searches.
  * @author John Mercier <moaxcp at gmail.com>
  */
 public interface ListFile<E> {
@@ -45,8 +51,14 @@ public interface ListFile<E> {
     E get(long index);
     List<E> get(long start, long end);
     long indexOf(E element);
+    long indexOf(E element, long n);
+    List<Long> indexAllOf(E element);
+    ListFile<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException;
+    List<Long> indexAllOf(E element, Comparator<E> comparator);
+    ListFile<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException;
     boolean isEmpty();
     long lastIndexOf(E element);
+    long lastIndexOf(E element, long n);
     E remove(long index);
     boolean remove(long start, long end);
     boolean remove(E element);

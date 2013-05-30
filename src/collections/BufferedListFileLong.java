@@ -30,9 +30,9 @@ import java.io.IOException;
  *
  * @author john
  */
-public class ListFileBufferedLong extends AbstractListFileBuffered<Long> {
+public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
 
-    public ListFileBufferedLong(File file) {
+    public BufferedListFileLong(File file) {
         super(file);
     }
 
@@ -49,8 +49,8 @@ public class ListFileBufferedLong extends AbstractListFileBuffered<Long> {
     }
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ListFileBufferedLong) {
-            ListFileBufferedLong list = (ListFileBufferedLong) o;
+        if (o instanceof BufferedListFileLong) {
+            BufferedListFileLong list = (BufferedListFileLong) o;
             if (size() != list.size()) {
                 return false;
             }
@@ -94,8 +94,8 @@ public class ListFileBufferedLong extends AbstractListFileBuffered<Long> {
     }
 
     @Override
-    public ListFileBufferedLong subList(File file, long start, long end) throws FileNotFoundException, IOException {
-        ListFileBufferedLong list = new ListFileBufferedLong(file);
+    public BufferedListFileLong subList(File file, long start, long end) throws FileNotFoundException, IOException {
+        BufferedListFileLong list = new BufferedListFileLong(file);
         for (long i = start; i < end; i++) {
             list.add(get(i));
         }

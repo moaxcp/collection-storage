@@ -25,7 +25,7 @@ import java.io.IOException;
  * Creates a list of longs backed by a file. The max number of bytes in the file
  * is equal to Long.MAX_VALUE. This is the max bytes supported by
  * RandomAccessFile.
- * 
+ *
  * This Basic version can be improved for performance through subclasses and
  * should not be generally used at all.
  *
@@ -36,21 +36,6 @@ public class ListFileLong extends AbstractListFile<Long> {
     public ListFileLong(File file) {
         super(file);
         recordLength = Long.SIZE / 8;
-    }
-
-    @Override
-    public void add(long index, Long number) {
-        try {
-            for (long i = size(); i > index; i--) {
-                elementFile.seek(recordLength * (i - 1));
-                long temp = elementFile.readLong();
-                elementFile.seek(recordLength * i);
-                elementFile.writeLong(temp);
-            }
-            set(index, number);
-        } catch (IOException ex) {
-            throw new ListFileException(ex);
-        }
     }
 
     @Override
@@ -89,9 +74,13 @@ public class ListFileLong extends AbstractListFile<Long> {
 
     @Override
     public Long set(long index, Long element) {
+        Long r = null;
         try {
             elementFile.seek(recordLength * index);
-            long r = elementFile.readLong();
+            if (index < size()) {
+                r = elementFile.readLong();
+                elementFile.seek(recordLength * index);
+            }
             elementFile.writeLong(element);
             return r;
         } catch (IOException ex) {

@@ -27,14 +27,10 @@ import java.io.IOException;
  *
  * @author john
  */
-public class SortedSetFileLong extends ListFileBufferedLong {
+public class SortedSetFileLong extends BufferedListFileLong {
     
     public SortedSetFileLong(File file) throws FileNotFoundException, IOException {
         super(file);
-    }
-    
-    public SortedSetFileLong(String path) throws FileNotFoundException, IOException {
-        super(path);
     }
     
     public long indexOf(long number) {
