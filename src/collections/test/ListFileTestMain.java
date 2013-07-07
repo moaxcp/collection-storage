@@ -54,16 +54,13 @@ public class ListFileTestMain {
         pass = tester.testContainsAllCollection(new File(filePath + "/testAddGet"), count);
         System.out.printf("%2$s %1$s\n", "testContainsAllCollection(list, count)", pass ? "passed" : "failed");
 
-        pass = tester.testContainsAllFileList(new File(filePath + "/testContainsAllCollection"), count);
-        System.out.printf("%2$s %1$s\n", "testContainsAllFileList(list, count)", pass ? "passed" : "failed");
-
-        pass = tester.testGetStartEnd(new File(filePath + "/testGetStartEnd"), count);
-        System.out.printf("%2$s %1$s\n", "testGetStartEnd(list, count)", pass ? "passed" : "failed");
+        pass = tester.testContainsAllFileList(new File(filePath + "/testContainsAllCollectionTo"), new File(filePath + "/testContainsAllCollectionFrom"), count);
+        System.out.printf("%2$s %1$s\n", "testContainsAllFileList(ListFile, ListFile, count)", pass ? "passed" : "failed");
 
         pass = tester.testIndexOf(new File(filePath + "/testIndexOf"), count);
         System.out.printf("%2$s %1$s\n", "testIndexOf(list, count)", pass ? "passed" : "failed");
 
-        pass = tester.testIndexOfNumber(new File(filePath + "/testIndexOfNumber"), count);
+        pass = tester.testIndexOfNumber(new File(filePath + "/testIndexOfNumber"), count, 10);
         System.out.printf("%2$s %1$s\n", "testIndexOfNumber(list, count)", pass ? "passed" : "failed");
 
         pass = tester.testIndexAllOf(new File(filePath + "/testIndexAllOf"), count);
@@ -81,7 +78,7 @@ public class ListFileTestMain {
         pass = tester.testIsEmpty(new File(filePath + "/testIsEmpty"), count);
         System.out.printf("%2$s %1$s\n", "testIsEmpty(list, count)", pass ? "passed" : "failed");
 
-        pass = tester.testLastIndexOf(new File(filePath + "/testLastIndexOf"), count);
+        pass = tester.testLastIndexOf(new File(filePath + "/testLastIndexOf"), count, 10);
         System.out.printf("%2$s %1$s\n", "testLastIndexOf(list, count)", pass ? "passed" : "failed");
 
         pass = tester.testLastIndexOfNumber(new File(filePath + "/testLastIndexOfNumber"), count);
@@ -108,13 +105,19 @@ public class ListFileTestMain {
         pass = tester.testSet(new File(filePath + "/testSet"), count);
         System.out.printf("%2$s %1$s\n", "testSet(list, count)", pass ? "passed" : "failed");
 
+        pass = tester.testSize(new File(filePath + "/testSize"), count);
+        System.out.printf("%2$s %1$s\n", "testSize(list, count)", pass ? "passed" : "failed");
+
         pass = tester.testSubList(new File(filePath + "/testSubList"), count);
         System.out.printf("%2$s %1$s\n", "testSubList(list, count)", pass ? "passed" : "failed");
+
+        pass = tester.testSubListFile(new File(filePath + "/testSubListFile"), count);
+        System.out.printf("%2$s %1$s\n", "testSubListFile(list, count)", pass ? "passed" : "failed");
 
     }
     
     public static void main(String... args) throws FileNotFoundException, IOException {
-        int count = 25;
+        int count = 250;
         
         AbstractListFileTest tester = new ListFileTestLong(true);
         runListFileTest(tester, count);

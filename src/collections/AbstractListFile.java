@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author John Mercier <moaxcp at gmail.com>
  */
-public abstract class AbstractListFile<E> implements ListFile<E> {
+public abstract class AbstractListFile<E> implements List64<E> {
 
     RandomAccessFile elementFile;
     File file;
@@ -96,7 +96,7 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     }
 
     @Override
-    public final void addAll(ListFile<E> list) {
+    public final void addAll(List64<E> list) {
         long index = size();
         for (long i = 0; i < list.size(); i++) {
             set(index++, list.get(i));  //no add() to reduce calls to size()
@@ -113,7 +113,7 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     }
 
     @Override
-    public final void addAll(long index, ListFile<E> list) {
+    public final void addAll(long index, List64<E> list) {
         shiftSubList(index, size(), list.size());
         for (long i = 0; i < list.size(); i++) {
             set(index++, list.get(i));
@@ -145,23 +145,12 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     }
 
     @Override
-    public final boolean containsAll(ListFile<E> list) {
+    public final boolean containsAll(List64<E> list) {
         boolean r = true;
         for (long i = 0; i < list.size(); i++) {
             r &= contains(list.get(i));
         }
         return r;
-    }
-
-    @Override
-    public final List<E> get(long start, long end) {
-        ArrayList<E> list = new ArrayList<>();
-
-        for (long i = start; i < end; i++) {
-            list.add(get(i));
-        }
-
-        return list;
     }
 
     @Override
@@ -177,11 +166,11 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     @Override
     public final long indexOf(E element, long n) {
         long index = -1;
-        for (long i = 0, j = 0; i < n; i++) {
+        for (long i = 0, j = 0; i <= n; i++) {
             index = -1;
             for (; j < size(); j++) {
                 if (get(j).equals(element)) {
-                    index = j;
+                    index = j++;
                     break;
                 }
             }
@@ -201,8 +190,8 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     }
 
     @Override
-    public final ListFile<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException {
-        ListFile<Long> list = new ListFileLong(file);
+    public final List64<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
         list.open("rw");
         for (long j = 0; j < size(); j++) {
             if (get(j).equals(element)) {
@@ -224,8 +213,8 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     }
 
     @Override
-    public final ListFile<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException {
-        ListFile<Long> list = new ListFileLong(file);
+    public final List64<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
         list.open("rw");
         for (long j = 0; j < size(); j++) {
             if (comparator.compare(get(j), element) == 0) {
@@ -253,11 +242,11 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     @Override
     public long lastIndexOf(E element, long n) {
         long index = -1;
-        for (long i = 0, j = size() - 1; i < n; i++) {
+        for (long i = 0, j = size() - 1; i <= n; i++) {
             index = -1;
             for (; j >= 0; j--) {
                 if (get(j).equals(element)) {
-                    index = j;
+                    index = j--;
                     break;
                 }
             }
@@ -318,7 +307,7 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
     }
 
     //TODO find a new algorithm that does not use list.contains(value)
-    final boolean batchRemove(ListFile<E> list, boolean compliment) {
+    final boolean batchRemove(List64<E> list, boolean compliment) {
         long size = size();
         long read = 0;
         long write = 0;
@@ -354,7 +343,7 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
 
     //TODO find gaps and shift down elements between them until end
     @Override
-    public final boolean removeAll(ListFile<E> list) {
+    public final boolean removeAll(List64<E> list) {
         return batchRemove(list, false);
     }
 
@@ -366,7 +355,18 @@ public abstract class AbstractListFile<E> implements ListFile<E> {
 
     //TODO find gaps and shift down elements between them until end
     @Override
-    public final boolean retainAll(ListFile<E> list) {
+    public final boolean retainAll(List64<E> list) {
         return batchRemove(list, true);
+    }
+
+    @Override
+    public final List<E> subList(long start, long end) {
+        ArrayList<E> list = new ArrayList<>();
+
+        for (long i = start; i < end; i++) {
+            list.add(get(i));
+        }
+
+        return list;
     }
 }

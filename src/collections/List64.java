@@ -25,37 +25,36 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * ListFile is very similar to List. List cannot be used in these collections
+ * List64 is very similar to List. List cannot be used in these collections
  * because these collections have a long index instead of an int index.
  * 
  * This interface adds to List allowning for operations with other ListFiles
  * instead of just collections. There are added indexing options to help create an
- * index List<E> or ListFile<E> for a specific element. This can help create index
+ * index List<E> or List64<E> for a specific element. This can help create index
  * files of equal items or comparable items using a comparator for searches.
  * @author John Mercier <moaxcp at gmail.com>
  */
-public interface ListFile<E> {
+public interface List64<E> {
     void open(String mode) throws FileNotFoundException, IOException;
     void close() throws IOException;
     long size();
     void add(E element);
     void add(long index, E element);
     void addAll(Collection<E> c);
-    void addAll(ListFile<E> list);
+    void addAll(List64<E> list);
     void addAll(long index, Collection<E> c);
-    void addAll(long index, ListFile<E> list);
+    void addAll(long index, List64<E> list);
     void clear();
     boolean contains(E element);
     boolean containsAll(Collection<E> c);
-    boolean containsAll(ListFile<E> list);
+    boolean containsAll(List64<E> list);
     E get(long index);
-    List<E> get(long start, long end);
     long indexOf(E element);
     long indexOf(E element, long n);
     List<Long> indexAllOf(E element);
-    ListFile<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException;
+    List64<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException;
     List<Long> indexAllOf(E element, Comparator<E> comparator);
-    ListFile<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException;
+    List64<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException;
     boolean isEmpty();
     long lastIndexOf(E element);
     long lastIndexOf(E element, long n);
@@ -63,9 +62,10 @@ public interface ListFile<E> {
     boolean remove(long start, long end);
     boolean remove(E element);
     boolean removeAll(Collection<E> c);
-    boolean removeAll(ListFile<E> list);
+    boolean removeAll(List64<E> list);
     boolean retainAll(Collection<E> c);
-    boolean retainAll(ListFile<E> list);
+    boolean retainAll(List64<E> list);
     E set(long index, E element);
-    ListFile<E> subList(File file, long start, long end) throws FileNotFoundException, IOException;
+    List<E> subList(long start, long end);
+    List64<E> subList(File file, long start, long end) throws FileNotFoundException, IOException;
 }

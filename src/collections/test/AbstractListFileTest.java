@@ -4,7 +4,7 @@
  */
 package collections.test;
 
-import collections.ListFile;
+import collections.List64;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,13 +26,21 @@ public abstract class AbstractListFileTest<E> {
 
     public abstract List<E> getOrderedList(int size);
 
+    public abstract List<E> getOrderedList(int size, int unique);
+
     public abstract List<E> getRandomList(int size);
 
-    public abstract ListFile<E> getOrderedList(File file, long size) throws FileNotFoundException, IOException;
+    public abstract List<E> getRandomList(int size, int unique);
 
-    public abstract ListFile<E> getRandomList(File file, long size) throws FileNotFoundException, IOException;
-    
-    public abstract ListFile<E> getEmptyList(File file) throws FileNotFoundException, IOException;
+    public abstract List64<E> getOrderedList(File file, int size) throws FileNotFoundException, IOException;
+
+    public abstract List64<E> getOrderedList(File file, int size, int unique) throws FileNotFoundException, IOException;
+
+    public abstract List64<E> getRandomList(File file, int size) throws FileNotFoundException, IOException;
+
+    public abstract List64<E> getRandomList(File file, int size, int unique) throws FileNotFoundException, IOException;
+
+    public abstract List64<E> getEmptyList(File file) throws FileNotFoundException, IOException;
 
     public void print(String message) {
         if (print) {
@@ -40,20 +48,22 @@ public abstract class AbstractListFileTest<E> {
         }
     }
 
-    public boolean compareList(ListFile<E> test, List<E> expected) {
+    public boolean compareList(List64<E> test, List<E> expected) {
         print("Comparing test list with expected results.");
         boolean pass = true;
         if (test.size() != expected.size()) {
-            print("compare failed sizes do not match");
+            print("compare failed sizes do not match " + test.size() + " " + expected.size());
             pass = false;
-        }
-        print("sizes pass");
-        for (int i = 0; i < test.size(); i++) {
-            E inTest = test.get(i);
-            E inExpected = expected.get(i);
-            if (!inTest.equals(inExpected)) {
-                print(i + " failed compare. got " + inTest + " instead of " + inExpected);
-                pass = false;
+        } else {
+            print("sizes pass " + test.size() + " " + expected.size());
+
+            for (int i = 0; i < test.size(); i++) {
+                E inTest = test.get(i);
+                E inExpected = expected.get(i);
+                if (!inTest.equals(inExpected)) {
+                    print(i + " failed compare. got " + inTest + " instead of " + inExpected);
+                    pass = false;
+                }
             }
         }
         if (pass) {
@@ -65,20 +75,21 @@ public abstract class AbstractListFileTest<E> {
         return pass;
     }
 
-    public boolean compareList(ListFile<E> test, ListFile<E> expected) {
+    public boolean compareList(List64<E> test, List64<E> expected) {
         print("Comparing test list with expected results.");
         boolean pass = true;
         if (test.size() != expected.size()) {
-            print("compare failed sizes do not match");
+            print("compare failed sizes do not match " + test.size() + " " + expected.size());
             pass = false;
-        }
-        print("sizes pass");
-        for (int i = 0; i < test.size(); i++) {
-            E inTest = test.get(i);
-            E inExpected = expected.get(i);
-            if (!inTest.equals(inExpected)) {
-                print(i + " failed compare. got " + inTest + " instead of " + inExpected);
-                pass = false;
+        } else {
+            print("sizes pass " + test.size() + " " + expected.size());
+            for (int i = 0; i < test.size(); i++) {
+                E inTest = test.get(i);
+                E inExpected = expected.get(i);
+                if (!inTest.equals(inExpected)) {
+                    print(i + " failed compare. got " + inTest + " instead of " + inExpected);
+                    pass = false;
+                }
             }
         }
         if (pass) {
@@ -90,7 +101,7 @@ public abstract class AbstractListFileTest<E> {
         return pass;
     }
 
-    public void printList(ListFile<E> list) {
+    public void printList(List64<E> list) {
         print("Printing list");
         for (long i = 0; i < list.size(); i++) {
             print(i + " = " + list.get(i));
@@ -98,7 +109,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testAddGet(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         print("testAddGet()");
         boolean pass = true;
@@ -122,7 +133,7 @@ public abstract class AbstractListFileTest<E> {
         pass = compareList(list, l);
 
         print("testAddGet() " + (pass ? "passed" : "failed"));
-        
+
         list.close();
         file.delete();
 
@@ -130,7 +141,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testAddAtIndex(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         boolean pass = true;
         print("testAddAtIndex() started");
@@ -157,7 +168,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testAddAllCollection(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         boolean pass = true;
         print("testAddAllCollection() started");
@@ -177,7 +188,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testAddAllColectionAtIndex(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         boolean pass = true;
         print("testAddAllColectionAtIndex() started");
@@ -201,18 +212,18 @@ public abstract class AbstractListFileTest<E> {
         boolean pass = true;
         print("testAddAllFileList() started");
         print("generating lists");
-        ListFile<E> toList = getEmptyList(to);
-        ListFile<E> fromList = getOrderedList(from, count);
-        toList.open("rw"); 
-        fromList.open("rw"); 
-        
+        List64<E> toList = getEmptyList(to);
+        List64<E> fromList = getOrderedList(from, count);
+        toList.open("rw");
+        fromList.open("rw");
+
         print("adding lists");
         toList.addAll(fromList);
-        
+
         pass = compareList(toList, fromList);
-        
+
         print("testAddAllFileList() " + (pass ? "passed" : "failed"));
-        
+
         toList.close();
         fromList.close();
         to.delete();
@@ -225,20 +236,20 @@ public abstract class AbstractListFileTest<E> {
         boolean pass = true;
         List<E> toList = getOrderedList(count / 2);
         List<E> fromList = getOrderedList(count / 2);
-        ListFile<E> toListFile = getOrderedList(to, count / 2);
+        List64<E> toListFile = getOrderedList(to, count / 2);
         toListFile.open("rw");
-        ListFile<E> fromListFile = getOrderedList(from, count / 2);
+        List64<E> fromListFile = getOrderedList(from, count / 2);
         fromListFile.open("rw");
-        
+
         print("adding lists");
-        
+
         toList.addAll(count / 4, fromList);
         toListFile.addAll(count / 4, fromListFile);
-        
+
         pass = compareList(toListFile, toList);
-        
+
         print("testAddAllFileListAtIndex() " + (pass ? "passed" : "failed"));
-        
+
         toListFile.close();
         to.delete();
         fromListFile.close();
@@ -249,19 +260,19 @@ public abstract class AbstractListFileTest<E> {
     public boolean testContains(File file, int count) throws FileNotFoundException, IOException {
         print("testContains() started");
         boolean pass = true;
-        ListFile<E> list = getOrderedList(file, count);
+        List64<E> list = getOrderedList(file, count);
         list.open("rw");
         List<E> check = getOrderedList(count);
-        
+
         print("checking contains");
-        for(int i = 0; i < check.size(); i++) {
+        for (int i = 0; i < check.size(); i++) {
             pass &= list.contains(check.get(i));
-            if(!pass) {
+            if (!pass) {
                 print("list does not contain " + check.get(i));
                 break;
             }
         }
-        
+
         print("testContains() " + (pass ? "passed" : "failed"));
         list.close();
         file.delete();
@@ -270,50 +281,110 @@ public abstract class AbstractListFileTest<E> {
 
     public boolean testContainsAllCollection(File file, int count) throws FileNotFoundException, IOException {
         print("testContainsAllCollection() started");
-        ListFile<E> list = getEmptyList(file);
+        boolean pass = true;
+        List64<E> list = getOrderedList(file, count);
         list.open("rw");
-        
-        
-        
+        List<E> check = getOrderedList(count);
+
+        print("checking with count " + count);
+        pass = list.containsAll(check);
+
+        print("checking with count / 2 " + count / 2);
+        check = getOrderedList(count / 2);
+        pass &= list.containsAll(check);
+
+        for (int i = 0; i < count / 4; i++) {
+            check.remove(0);
+        }
+
+        print("checking with [count / 4 - count / 2]");
+        pass &= list.containsAll(check);
+
+        print("testContainsAllCollection() " + (pass ? "passed" : "failed"));
         list.close();
         file.delete();
-        return false;
+        return pass;
     }
 
-    public boolean testContainsAllFileList(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+    public boolean testContainsAllFileList(File file, File checkFile, int count) throws FileNotFoundException, IOException {
+        print("testContainsAllFileList() started");
+        boolean pass = true;
+        List64<E> list = getOrderedList(file, count);
         list.open("rw");
-        list.close();
-        file.delete();
-        return false;
-    }
+        List<E> check = getOrderedList(count);
 
-    public boolean testGetStartEnd(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
-        list.open("rw");
+        print("checking with count " + count);
+        pass = list.containsAll(check);
+
+        print("checking with count / 2 " + count / 2);
+        check = getOrderedList(count / 2);
+        pass &= list.containsAll(check);
+
+        for (int i = 0; i < count / 4; i++) {
+            check.remove(0);
+        }
+
+        print("checking with [count / 4 - count / 2]");
+        pass &= list.containsAll(check);
+
+        print("testContainsAllFileList() " + (pass ? "passed" : "failed"));
         list.close();
         file.delete();
-        return false;
+        return pass;
     }
 
     public boolean testIndexOf(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        print("testIndexOf() started");
+        List64<E> list = getOrderedList(file, count);
         list.open("rw");
+        List<E> check = getOrderedList(count);
+        boolean pass = true;
+        for (int i = 0; i < count; i++) {
+            pass &= check.indexOf(check.get(i)) == list.indexOf(list.get(i));
+            if (!pass) {
+                print("failed on " + i);
+            }
+        }
         list.close();
         file.delete();
-        return false;
+        print("testIndexOf() " + (pass ? "passed" : "failed"));
+        return pass;
     }
 
-    public boolean testIndexOfNumber(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+    public boolean testIndexOfNumber(File file, int count, int unique) throws FileNotFoundException, IOException {
+        print("testIndexOfNumber() started");
+        List64<E> list = getOrderedList(file, count, unique);
+        List<E> check = getOrderedList(count, unique);
         list.open("rw");
+        boolean pass = compareList(list, check);
+        if (pass) {
+            outer:
+            for (int i = 0; i < count;) {
+                E element = list.get(i);
+                for (int j = 0;; j++) {
+                    long index = list.indexOf(element, j);
+                    print("index " + index);
+                    if (index == -1) {
+                        i = i + j;
+                        break;
+                    } else {
+                        if (!element.equals(check.get((int) index))) {
+                            print("element " + element + " does not equal " + check.get((int) index));
+                            pass = false;
+                            break outer;
+                        }
+                    }
+                }
+            }
+        }
         list.close();
         file.delete();
-        return false;
+        print("testIndexOfNumber() " + (pass ? "passed" : "failed"));
+        return pass;
     }
 
     public boolean testIndexAllOf(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -321,7 +392,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testIndexAllOfFile(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -329,7 +400,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testIndexAllOfComparator(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -337,7 +408,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testIndexAllOfComparatorFile(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -345,23 +416,47 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testIsEmpty(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
         return false;
     }
 
-    public boolean testLastIndexOf(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+    public boolean testLastIndexOf(File file, int count, int unique) throws FileNotFoundException, IOException {
+        print("testLastIndexOf() started");
+        List64<E> list = getOrderedList(file, count, unique);
+        List<E> check = getOrderedList(count, unique);
         list.open("rw");
+        boolean pass = compareList(list, check);
+        if (pass) {
+            outer:
+            for (int i = count - 1; i >= 0;) {
+                E element = list.get(i);
+                for (int j = 0;; j++) {
+                    long index = list.lastIndexOf(element, j);
+                    print("index " + index);
+                    if (index == -1) {
+                        i = i - j;
+                        break;
+                    } else {
+                        if (!element.equals(check.get((int) index))) {
+                            print("element " + element + " does not equal " + check.get((int) index));
+                            pass = false;
+                            break outer;
+                        }
+                    }
+                }
+            }
+        }
         list.close();
         file.delete();
-        return false;
+        print("testLastIndexOf() " + (pass ? "passed" : "failed"));
+        return pass;
     }
 
     public boolean testLastIndexOfNumber(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -369,7 +464,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRemove(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -377,7 +472,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRemoveStartEnd(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -385,7 +480,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRemoveAllCollection(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -393,7 +488,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRetainAllCollection(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -401,7 +496,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRemoveAllFileList(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -409,7 +504,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRetainAllFileList(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         list.close();
         file.delete();
@@ -417,7 +512,7 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testSet(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+        List64<E> list = getEmptyList(file);
         list.open("rw");
         print("testSet()");
         boolean pass = true;
@@ -447,15 +542,36 @@ public abstract class AbstractListFileTest<E> {
         pass = compareList(list, l);
 
         print("testSet() " + (pass ? "passed" : "failed"));
-        
+
+        list.close();
+        file.delete();
+        return pass;
+    }
+    
+    public boolean testSize(File file, int count) throws FileNotFoundException, IOException {
+        List64<E> list = getOrderedList(file, count);
+        list.open("rw");
+        List<E> check = getOrderedList(count);
+        boolean pass = list.size() == check.size();
+        print("testSize() " + (pass ? "passed" : "failed"));
         list.close();
         file.delete();
         return pass;
     }
 
-    public boolean testSubList(File file, int count) throws FileNotFoundException, IOException {
-        ListFile<E> list = getEmptyList(file);
+    public boolean testSubListFile(File file, int count) throws FileNotFoundException, IOException {
+        List64<E> list = getEmptyList(file);
         list.open("rw");
+        list.close();
+        file.delete();
+        return false;
+    }
+
+    public boolean testSubList(File file, int count) throws FileNotFoundException, IOException {
+        List64<E> list = getOrderedList(file, count);
+        list.open("rw");
+        List<E> check = getOrderedList(count);
+
         list.close();
         file.delete();
         return false;

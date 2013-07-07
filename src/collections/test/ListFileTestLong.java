@@ -17,7 +17,7 @@
  */
 package collections.test;
 
-import collections.ListFile;
+import collections.List64;
 import collections.ListFileLong;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,6 +44,19 @@ public class ListFileTestLong extends AbstractListFileTest<Long> {
         }
         return list;
     }
+
+    @Override
+    public List<Long> getOrderedList(int size, int unique) {
+        List<Long> list = new ArrayList<Long>();
+        List<Long> values = new ArrayList<Long>();
+        for(int i = 0; i < unique; i++) {
+            values.add((long)size / unique * i);
+        }
+        for(int i = 0; i < size; i++) {
+            list.add(values.get(i >= size - size % unique ? (size - size % unique - 1) / (size / unique)  : i / (size / unique)));
+        }
+        return list;
+    }
     
     @Override
     public List<Long> getRandomList(int size) {
@@ -54,10 +67,20 @@ public class ListFileTestLong extends AbstractListFileTest<Long> {
         }
         return list;
     }
+
+    @Override
+    public List<Long> getRandomList(int size, int unique) {
+        List<Long> list = new ArrayList<>();
+        Random rand = new Random();
+        for(int i = 0; i < size; i++) {
+            list.add((long)rand.nextInt(unique) * (size / unique));
+        }
+        return list;
+    }
     
     @Override
-    public ListFile<Long> getOrderedList(File file, long size) throws FileNotFoundException, IOException {
-        ListFile<Long> list = new ListFileLong(file);
+    public List64<Long> getOrderedList(File file, int size) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
         list.open("rw");
         for(long i = 0; i < size; i++) {
             list.add(i);
@@ -65,10 +88,25 @@ public class ListFileTestLong extends AbstractListFileTest<Long> {
         list.close();
         return list;
     }
+
+    @Override
+    public List64<Long> getOrderedList(File file, int size, int unique) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
+        list.open("rw");
+        List<Long> values = new ArrayList<Long>();
+        for(int i = 0; i < unique; i++) {
+            values.add((long)size / unique * i);
+        }
+        for(int i = 0; i < size; i++) {
+            list.add(values.get(i >= size - size % unique ? (size - size % unique - 1) / (size / unique)  : i / (size / unique)));
+        }
+        list.close();
+        return list;
+    }
     
     @Override
-    public ListFile<Long> getRandomList(File file, long size) throws FileNotFoundException, IOException {
-        ListFile<Long> list = new ListFileLong(file);
+    public List64<Long> getRandomList(File file, int size) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
         list.open("rw");
         Random rand = new Random();
         for(int i = 0; i < size; i++) {
@@ -79,8 +117,20 @@ public class ListFileTestLong extends AbstractListFileTest<Long> {
     }
 
     @Override
-    public ListFile<Long> getEmptyList(File file) throws FileNotFoundException, IOException {
-        ListFile<Long> list = new ListFileLong(file);
+    public List64<Long> getRandomList(File file, int size, int unique) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
+        list.open("rw");
+        Random rand = new Random();
+        for(int i = 0; i < size; i++) {
+            list.add((long)rand.nextInt(unique) * (size / unique));
+        }
+        list.close();
+        return list;
+    }
+
+    @Override
+    public List64<Long> getEmptyList(File file) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
         return list;
     }
     
