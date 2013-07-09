@@ -258,6 +258,11 @@ public abstract class AbstractListFile<E> implements List64<E> {
     public E remove(long index) {
         E r = get(index);
         shiftSubList(index + 1, size(), -1);
+        try {
+            elementFile.setLength(elementFile.length() - recordLength);
+        } catch (IOException ex) {
+            throw new ListFileException(ex);
+        }
         return r;
     }
 
@@ -275,6 +280,11 @@ public abstract class AbstractListFile<E> implements List64<E> {
     @Override
     public boolean remove(long start, long end) {
         shiftSubList(end, size(), end - start);
+        try {
+            elementFile.setLength(elementFile.length() - recordLength * (end - start));
+        } catch (IOException ex) {
+            throw new ListFileException(ex);
+        }
         return true;
     }
 

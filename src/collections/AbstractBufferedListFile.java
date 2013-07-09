@@ -27,20 +27,22 @@ import java.io.IOException;
  */
 public abstract class AbstractBufferedListFile<E> extends AbstractListFile<E> {
     
-    int maxBufferSize;
-    E[] buffer;
+    protected int maxBufferSize;
     
-    public AbstractBufferedListFile(File file) {
+    public AbstractBufferedListFile(File file, int maxBufferSize) {
         super(file);
-        maxBufferSize = 16 * 1024 * 1024 / recordLength; //16 MB
+        this.maxBufferSize = maxBufferSize; //16 MB
     }
 
     public final void setMaxBufferSize(int maxBufferSize) {
         this.maxBufferSize = maxBufferSize;
     }
+    
+    protected abstract E[] getBuffer();
+    protected abstract E[] getBuffer(int size);
 
     private void loadBuffer(long start, long end) {
-        buffer = (E[]) new Object[(int) (end - start)];
+        E[] buffer =  getBuffer((int) (end - start));
         for (long i = start; i < end; i++) {
             buffer[(int) (i - start)] = get(i);
         }
@@ -75,14 +77,14 @@ public abstract class AbstractBufferedListFile<E> extends AbstractListFile<E> {
             }
         }
 
-        buffer = null; //clear buffer for garbage collection
+        getBuffer(0); //clear buffer for garbage collection
         
-        if (trim) {
-            try {
-                elementFile.getChannel().truncate(end + shift);
-            } catch (IOException ex) {
-                throw new ListFileException(ex);
-            }
-        }
+//        if (trim) {
+//            try {
+//                //elementFile.getChannel().truncate(end + shift);
+//            } catch (IOException ex) {
+//                throw new ListFileException(ex);
+//            }
+//        }
     }
 }

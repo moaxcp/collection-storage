@@ -121,5 +121,8 @@ public class ListFileTestMain {
         
         AbstractListFileTest tester = new ListFileTestLong(true);
         runListFileTest(tester, count);
+        
+        tester = new BufferedListFileTestLong(true);
+        runListFileTest(tester, count);
     }
 }

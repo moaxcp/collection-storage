@@ -25,27 +25,16 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * List64 is very similar to List. List cannot be used in these collections
- * because these collections have a long index instead of an int index.
- * 
- * This interface adds to List allowning for operations with other ListFiles
- * instead of just collections. There are added indexing options to help create an
- * index List<E> or List64<E> for a specific element. This can help create index
- * files of equal items or comparable items using a comparator for searches.
+ *
  * @author John Mercier <moaxcp at gmail.com>
  */
-public interface List64<E> {
+public interface SortedSet64<E> {
     void open(String mode) throws FileNotFoundException, IOException;
     void close() throws IOException;
-    long size();
-    void add(E element);
-    void add(long index, E element);
-    void addAll(Collection<E> c);
-    void addAll(List64<E> list);
-    void addAll(long index, Collection<E> c);
-    void addAll(long index, List64<E> list);
+    boolean add(E e);
+    boolean addAll(Collection<? extends E> c);
     void clear();
-    boolean contains(E element);
+    boolean contains(E e);
     boolean containsAll(Collection<E> c);
     boolean containsAll(List64<E> list);
     E get(long index);
@@ -64,12 +53,13 @@ public interface List64<E> {
     long lastIndexOf(E element, long n);
     E remove(long index);
     boolean remove(long start, long end);
-    boolean remove(E element);
+    boolean remove(E e);
     boolean removeAll(Collection<E> c);
     boolean removeAll(List64<E> list);
     boolean retainAll(Collection<E> c);
     boolean retainAll(List64<E> list);
-    E set(long index, E element);
-    List<E> subList(long start, long end);
-    List64<E> subList(File file, long start, long end) throws FileNotFoundException, IOException;
+    long size();
+    AbstractListFile<E> toListFile(File file) throws FileNotFoundException, IOException;
+    List<E> subSet(long start, long end);
+    List64<E> subSet(File file, long start, long end) throws FileNotFoundException, IOException;
 }

@@ -1,0 +1,13 @@
+package collections.sort;
+
+
+import collections.List64;
+
+/**
+ * interface for a SortAlgorithm.
+ * @author John Mercier <moaxcp at gmail.com>
+ */
+public interface SortAlgorithm<T extends Comparable<? super T>> {
+    void sort(List64<T> list);
+    SortBenchmark getBenchmark();
+}

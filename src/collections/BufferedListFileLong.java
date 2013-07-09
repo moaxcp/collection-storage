@@ -31,9 +31,23 @@ import java.io.IOException;
  * @author john
  */
 public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
+    
+    private Long[] buffer;
+    
+    public BufferedListFileLong(File file, int maxBufferSize) {
+        super(file, maxBufferSize);
+        recordLength = Long.SIZE / 8;
+    }
 
-    public BufferedListFileLong(File file) {
-        super(file);
+    @Override
+    protected Long[] getBuffer() {
+        return buffer;
+    }
+
+    @Override
+    protected Long[] getBuffer(int size) {
+        buffer = new Long[size];
+        return buffer;
     }
 
     @Override
@@ -41,12 +55,13 @@ public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
         try {
             for (long i = start; i < start + buffer.length; i++) {
                 elementFile.seek(recordLength * i);
-                elementFile.writeLong(buffer[(int) (i - start)]);
+                elementFile.writeLong((Long)buffer[(int) (i - start)]);
             }
         } catch (IOException ex) {
             throw new ListFileException(ex);
         }
     }
+    
     @Override
     public boolean equals(Object o) {
         if (o instanceof BufferedListFileLong) {
@@ -83,9 +98,13 @@ public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
 
     @Override
     public Long set(long index, Long element) {
+        Long r = null;
         try {
             elementFile.seek(recordLength * index);
-            long r = elementFile.readLong();
+            if (index < size()) {
+                r = elementFile.readLong();
+                elementFile.seek(recordLength * index);
+            }
             elementFile.writeLong(element);
             return r;
         } catch (IOException ex) {
@@ -95,7 +114,7 @@ public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
 
     @Override
     public BufferedListFileLong subList(File file, long start, long end) throws FileNotFoundException, IOException {
-        BufferedListFileLong list = new BufferedListFileLong(file);
+        BufferedListFileLong list = new BufferedListFileLong(file, this.maxBufferSize);
         for (long i = start; i < end; i++) {
             list.add(get(i));
         }

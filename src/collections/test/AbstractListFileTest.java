@@ -363,7 +363,6 @@ public abstract class AbstractListFileTest<E> {
                 E element = list.get(i);
                 for (int j = 0;; j++) {
                     long index = list.indexOf(element, j);
-                    print("index " + index);
                     if (index == -1) {
                         i = i + j;
                         break;
@@ -384,8 +383,9 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testIndexAllOf(File file, int count) throws FileNotFoundException, IOException {
-        List64<E> list = getEmptyList(file);
+        List64<E> list = getRandomList(file, count);
         list.open("rw");
+        
         list.close();
         file.delete();
         return false;
@@ -435,7 +435,6 @@ public abstract class AbstractListFileTest<E> {
                 E element = list.get(i);
                 for (int j = 0;; j++) {
                     long index = list.lastIndexOf(element, j);
-                    print("index " + index);
                     if (index == -1) {
                         i = i - j;
                         break;
@@ -464,11 +463,20 @@ public abstract class AbstractListFileTest<E> {
     }
 
     public boolean testRemove(File file, int count) throws FileNotFoundException, IOException {
-        List64<E> list = getEmptyList(file);
+        List64<E> list = getRandomList(file, count);
         list.open("rw");
+        long size = list.size();
+        for(long i = 0; i < size; i++) {
+            list.remove(0);
+        }
+        boolean pass = list.size() == 0;
+        
+        print("size=" + list.size());
+        
         list.close();
         file.delete();
-        return false;
+        print("testRemove() " + (pass ? "passed" : "failed"));
+        return pass;
     }
 
     public boolean testRemoveStartEnd(File file, int count) throws FileNotFoundException, IOException {
