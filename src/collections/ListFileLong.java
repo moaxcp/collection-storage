@@ -91,9 +91,24 @@ public class ListFileLong extends AbstractListFile<Long> {
     @Override
     public ListFileLong subList(File file, long start, long end) throws FileNotFoundException, IOException {
         ListFileLong list = new ListFileLong(file);
+        list.open("rw");
         for (long i = start; i < end; i++) {
             list.add(get(i));
         }
+        list.close();
+        return list;
+    }
+
+    @Override
+    public List64<Long> copy(File file) throws FileNotFoundException, IOException {
+        List64<Long> list = new ListFileLong(file);
+        open("r");
+        list.open("rw");
+        for(long i = 0; i < size(); i++) {
+            list.add(get(i));
+        }
+        list.close();
+        close();
         return list;
     }
 }

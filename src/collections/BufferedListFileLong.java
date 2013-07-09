@@ -120,4 +120,9 @@ public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
         }
         return list;
     }
+
+    @Override
+    public List64<Long> copy(File file) throws FileNotFoundException, IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

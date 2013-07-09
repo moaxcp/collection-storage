@@ -5,6 +5,8 @@
 package collections.sort;
 
 import collections.List64;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,7 +20,8 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
     private long time;
 
     @Override
-    public void sort(List64<T> list) {
+    public void sort(List64<T> list) throws FileNotFoundException, IOException {
+        list.open("rw");
         long start = System.nanoTime();
         long gap = list.size() / 2;
         while (gap > 0) {
@@ -38,6 +41,7 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
             gap /= 2;
         }
         time = System.nanoTime() - start;
+        list.close();
     }
 
     @Override

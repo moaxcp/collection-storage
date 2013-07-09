@@ -44,6 +44,7 @@ public interface List64<E> {
     void addAll(List64<E> list);
     void addAll(long index, Collection<E> c);
     void addAll(long index, List64<E> list);
+    List64<E> copy(File file) throws FileNotFoundException, IOException;
     void clear();
     boolean contains(E element);
     boolean containsAll(Collection<E> c);
