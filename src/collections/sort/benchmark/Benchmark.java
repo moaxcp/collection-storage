@@ -1,10 +1,14 @@
 package collections.sort.benchmark;
 
 import collections.List64;
-import collections.ListFactory;
+import collections.test.ListFactory;
 import collections.sort.BubbleSort;
+import collections.sort.CiuraShellSort;
+import collections.sort.FrankLazarusShellSort;
+import collections.sort.GonnetBaezaYatesShellSort;
 import collections.sort.HeapSort;
 import collections.sort.InsertionSort;
+import collections.sort.KnuthShellSort;
 import collections.sort.SelectionSort;
 import collections.sort.ShellSort;
 import collections.sort.SortAlgorithm;
@@ -25,6 +29,7 @@ public class Benchmark {
     private int tests = 5; //number of sorts to be averaged
     private File listFile;
     private File copyFile;
+    private long startTime;
 
     public Benchmark() {
         benchmarks = new ArrayList<AlgorithmBenchmark>();
@@ -32,6 +37,28 @@ public class Benchmark {
         copyFile = new File("/extra/benchmarkCopy");
         listFile.delete();
         copyFile.delete();
+    }
+    
+    public String getTimeString(long time) {
+        long millisecond = 1000000;
+        long second = 1000 * millisecond;
+        long minute = 60 * second;
+        long hour = 60 * minute;
+        long day = 24 * hour;
+        long days = (time / day);
+        long hours = (time / hour) % 24;
+        long minutes = (time / minute) % 60;
+        long seconds = (time / second) % 60;
+        long milli = (time / millisecond) % 1000;
+        long nano = time % 1000000;
+        String sdays = (days < 10 ? "0" + days : ("" + days)) + ":";
+        String shours = (hours < 10 ? "0" + hours : ("" + hours)) + ":";
+        String sminutes = (minutes < 10 ? "0" + minutes : "" + minutes) + ":";
+        String sseconds = (seconds < 10 ? "0" + seconds : "" + seconds) + ":";
+        String smilli = (milli < 100 ? milli < 10 ? "00" + milli : "0" + milli : "" + milli);
+        String snano = nano < 100000 ? nano < 10000 ? nano < 1000 ? nano < 100 ? nano < 10 ? "00000" + nano : "0000" + nano : "000" + nano : "00" + nano : "0" + nano : "" + nano;
+        String postfix = days >= 1 ? "day" : hours >= 1 ? "hr" : minutes >= 1 ? "mn" : seconds >= 1 ? "s" : milli >= 1 ? "ms" : nano >= 1 ? "ns" : "";
+        return (days == 0 ? "" : sdays) + (days == 0 && hours == 0 ? "" : shours) + (days == 0 && hours == 0 && minutes == 0 ? "" : sminutes) + (days == 0 && hours == 0 && minutes == 0 && seconds == 0 ? "" : sseconds) + (days == 0 && hours == 0 && minutes == 0 && seconds == 0 && milli == 0 ? "" : smilli) + (milli == 0 ? snano : "") + " " + postfix;
     }
 
     /**
@@ -178,7 +205,11 @@ public class Benchmark {
         
         List<AlgorithmBenchmark> largeBenchmarks = new ArrayList<AlgorithmBenchmark>();
         //largeBenchmarks.add(new AlgorithmBenchmark("Shell Sort", new ShellSort()));
-        largeBenchmarks.add(new AlgorithmBenchmark("Heap Sort", new HeapSort()));
+        //largeBenchmarks.add(new AlgorithmBenchmark("Frank and Lazarus's Shell Sort", new FrankLazarusShellSort()));
+        largeBenchmarks.add(new AlgorithmBenchmark("Knuth Shell Sort", new KnuthShellSort()));
+        //largeBenchmarks.add(new AlgorithmBenchmark("Gonnet and Baeza-Yates Shell Sort", new GonnetBaezaYatesShellSort()));
+        //largeBenchmarks.add(new AlgorithmBenchmark("Ciura's Shell Sort", new CiuraShellSort()));
+        //largeBenchmarks.add(new AlgorithmBenchmark("Heap Sort", new HeapSort()));
         for(AlgorithmBenchmark a : largeBenchmarks) {
             benchmarks.add(a);
         }
@@ -199,56 +230,73 @@ public class Benchmark {
         smallSizes.add(130);
         smallSizes.add(140);
         smallSizes.add(150);
-//        smallSizes.add(160);
-//        smallSizes.add(170);
-//        smallSizes.add(180);
-//        smallSizes.add(190);
-//        smallSizes.add(200);
-//        smallSizes.add(210);
-//        smallSizes.add(220);
-//        smallSizes.add(230);
-//        smallSizes.add(240);
-//        smallSizes.add(250);
+        smallSizes.add(160);
+        smallSizes.add(170);
+        smallSizes.add(180);
+        smallSizes.add(190);
+        smallSizes.add(200);
+        smallSizes.add(210);
+        smallSizes.add(220);
+        smallSizes.add(230);
+        smallSizes.add(240);
+        smallSizes.add(250);
+        smallSizes.add(260);
+        smallSizes.add(270);
+        smallSizes.add(280);
+        smallSizes.add(290);
+        smallSizes.add(300);
         
         List<Integer> largeSizes = new ArrayList<Integer>();
-//        largeSizes.add(100000);
-//        largeSizes.add(200000);
-//        largeSizes.add(300000);
-//        largeSizes.add(400000);
-//        largeSizes.add(500000);
-//        largeSizes.add(600000);
-//        largeSizes.add(700000);
-//        largeSizes.add(800000);
-//        largeSizes.add(900000);
-//        largeSizes.add(1000000);
-//        largeSizes.add(2000000);
-//        largeSizes.add(3000000);
-//        largeSizes.add(4000000);
-//        largeSizes.add(5000000);
-//        largeSizes.add(6000000);
-//        largeSizes.add(7000000);
-//        largeSizes.add(8000000);
-//        largeSizes.add(9000000);
-//        largeSizes.add(10000000);
+        largeSizes.add(400);
+        largeSizes.add(500);
+        largeSizes.add(600);
+        largeSizes.add(700);
+        largeSizes.add(800);
+        largeSizes.add(900);
+        largeSizes.add(1000);
+        largeSizes.add(2000);
+//        largeSizes.add(3000);
+//        largeSizes.add(4000);
+//        largeSizes.add(5000);
+//        largeSizes.add(6000);
+//        largeSizes.add(7000);
+//        largeSizes.add(8000);
+//        largeSizes.add(9000);
+//        largeSizes.add(10000);
+//        largeSizes.add(11000);
+//        largeSizes.add(12000);
+//        largeSizes.add(13000);
+//        largeSizes.add(14000);
+//        largeSizes.add(15000);
+//        largeSizes.add(16000);
+//        largeSizes.add(17000);
+//        largeSizes.add(18000);
+//        largeSizes.add(19000);
+//        largeSizes.add(20000);
 
+        startTime = System.nanoTime();
         for (AlgorithmBenchmark benchmark : smallBenchmarks) {
             for(int i : smallSizes) {
                 System.out.println("Running " + benchmark.getName() + " " + tests + " times with size " + i);
+                System.out.println("Time: " + getTimeString(System.nanoTime() - startTime));
                 SortAlgorithm algorithm = benchmark.getAlgorithm();
                 AlgorithmSortResult result = runTests(algorithm, i);
                 benchmark.addResult(result);
             }
         }
+        
 
         for (AlgorithmBenchmark benchmark : largeBenchmarks) {
             for(int i : smallSizes) {
                 System.out.println("Running " + benchmark.getName() + " " + tests + " times with size " + i);
+                System.out.println("Time: " + getTimeString(System.nanoTime() - startTime));
                 SortAlgorithm algorithm = benchmark.getAlgorithm();
                 AlgorithmSortResult result = runTests(algorithm, i);
                 benchmark.addResult(result);
             }
             for(int i : largeSizes) {
                 System.out.println("Running " + benchmark.getName() + " " + tests + " times with size " + i);
+                System.out.println("Time: " + getTimeString(System.nanoTime() - startTime));
                 SortAlgorithm algorithm = benchmark.getAlgorithm();
                 AlgorithmSortResult result = runTests(algorithm, i);
                 benchmark.addResult(result);
@@ -296,6 +344,7 @@ public class Benchmark {
      * @param args 
      */
     public static void main(String... args) throws FileNotFoundException, IOException {
+        System.out.println(2 / 2.2);
         new Benchmark().start();
     }
 }

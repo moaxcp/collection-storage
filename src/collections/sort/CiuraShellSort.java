@@ -13,17 +13,15 @@ import java.util.List;
  *
  * @author John Mercier <moaxcp at gmail.com>
  */
-public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm<T> {
+public class CiuraShellSort<T extends Comparable<? super T>> implements SortAlgorithm<T> {
 
     private long compares;
     private long swaps;
     private long time;
+    private static int[] gaps = {701, 301, 132, 57, 23, 10, 4, 1};
 
-    @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
-        long start = System.nanoTime();
-        for(long gap = list.size() / 2; gap > 0; gap /= 2) {
+    private void useGaps(List64<T> list) throws FileNotFoundException, IOException {
+        for(long gap : gaps) {
             for (long i = gap; i < list.size(); i++) {
                 T temp = list.get(i);
                 long j = i;
@@ -38,6 +36,13 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
                 swaps++;
             }
         }
+    }
+
+    @Override
+    public void sort(List64<T> list) throws FileNotFoundException, IOException {
+        list.open("rw");
+        long start = System.nanoTime();
+        useGaps(list);
         time = System.nanoTime() - start;
         list.close();
     }

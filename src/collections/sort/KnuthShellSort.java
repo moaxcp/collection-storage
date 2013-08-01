@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author John Mercier <moaxcp at gmail.com>
  */
-public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm<T> {
+public class KnuthShellSort<T extends Comparable<? super T>> implements SortAlgorithm<T> {
 
     private long compares;
     private long swaps;
@@ -23,7 +23,9 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
     public void sort(List64<T> list) throws FileNotFoundException, IOException {
         list.open("rw");
         long start = System.nanoTime();
-        for(long gap = list.size() / 2; gap > 0; gap /= 2) {
+        long k = (long) (Math.log(2 * Math.ceil(list.size() / 3.0) + 1) / Math.log(3));
+        for(; k >= 0; k--) {
+            long gap = (long)((Math.pow(3, k) - 1) / 2);
             for (long i = gap; i < list.size(); i++) {
                 T temp = list.get(i);
                 long j = i;

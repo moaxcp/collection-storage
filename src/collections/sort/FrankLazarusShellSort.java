@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author John Mercier <moaxcp at gmail.com>
  */
-public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm<T> {
+public class FrankLazarusShellSort<T extends Comparable<? super T>> implements SortAlgorithm<T> {
 
     private long compares;
     private long swaps;
@@ -23,7 +23,10 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
     public void sort(List64<T> list) throws FileNotFoundException, IOException {
         list.open("rw");
         long start = System.nanoTime();
-        for(long gap = list.size() / 2; gap > 0; gap /= 2) {
+        //long shell = list.size() / 4;
+        //long gap = 2 * shell + 1;
+        for(long shell = list.size() / 4, gap = 2 * shell + 1; gap > 0; shell /= 2, gap = gap == 1 ? 0 : 2 * shell + 1) {
+        //while (gap > 0) {
             for (long i = gap; i < list.size(); i++) {
                 T temp = list.get(i);
                 long j = i;
@@ -37,6 +40,8 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
                 compares++;
                 swaps++;
             }
+            //shell /= 2;
+            //gap = gap == 1 ? 0 : 2 * shell + 1;
         }
         time = System.nanoTime() - start;
         list.close();
