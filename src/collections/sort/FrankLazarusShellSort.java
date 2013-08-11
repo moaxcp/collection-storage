@@ -20,8 +20,7 @@ public class FrankLazarusShellSort<T extends Comparable<? super T>> implements S
     private long time;
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         //long shell = list.size() / 4;
         //long gap = 2 * shell + 1;
@@ -44,7 +43,6 @@ public class FrankLazarusShellSort<T extends Comparable<? super T>> implements S
             //gap = gap == 1 ? 0 : 2 * shell + 1;
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override

@@ -113,16 +113,9 @@ public class BufferedListFileLong extends AbstractBufferedListFile<Long> {
     }
 
     @Override
-    public BufferedListFileLong subList(File file, long start, long end) throws FileNotFoundException, IOException {
-        BufferedListFileLong list = new BufferedListFileLong(file, this.maxBufferSize);
+    public void subList(long start, long end, List64<Long> list) {
         for (long i = start; i < end; i++) {
             list.add(get(i));
         }
-        return list;
-    }
-
-    @Override
-    public List64<Long> copy(File file) throws FileNotFoundException, IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

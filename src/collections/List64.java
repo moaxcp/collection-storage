@@ -17,7 +17,6 @@
  */
 package collections;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
@@ -44,25 +43,24 @@ public interface List64<E> {
     void addAll(List64<E> list);
     void addAll(long index, Collection<E> c);
     void addAll(long index, List64<E> list);
-    List64<E> copy(File file) throws FileNotFoundException, IOException;
     void clear();
     boolean contains(E element);
     boolean containsAll(Collection<E> c);
     boolean containsAll(List64<E> list);
     E get(long index);
     long indexOf(E element);
-    long indexOf(E element, long n);
+    long indexOf(E element, long start);
     List<Long> indexAllOf(E element);
-    List64<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException;
+    void indexAllOf(E element, List64<E> list);
     List<Long> indexAllOf(E element, Comparator<E> comparator);
-    List64<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException;
+    void indexAllOf(E element, Comparator<E> comparator, List64<E> list);
     @Override
     boolean equals(Object o);
     @Override
     int hashCode();
     boolean isEmpty();
     long lastIndexOf(E element);
-    long lastIndexOf(E element, long n);
+    long lastIndexOf(E element, long end);
     E remove(long index);
     boolean remove(long start, long end);
     boolean remove(E element);
@@ -72,5 +70,5 @@ public interface List64<E> {
     boolean retainAll(List64<E> list);
     E set(long index, E element);
     List<E> subList(long start, long end);
-    List64<E> subList(File file, long start, long end) throws FileNotFoundException, IOException;
+    void subList(long start, long end, List64<E> list);
 }

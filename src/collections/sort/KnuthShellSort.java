@@ -20,8 +20,7 @@ public class KnuthShellSort<T extends Comparable<? super T>> implements SortAlgo
     private long time;
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         long k = (long) (Math.log(2 * Math.ceil(list.size() / 3.0) + 1) / Math.log(3));
         for(; k >= 0; k--) {
@@ -41,7 +40,6 @@ public class KnuthShellSort<T extends Comparable<? super T>> implements SortAlgo
             }
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override

@@ -20,7 +20,7 @@ public class CiuraShellSort<T extends Comparable<? super T>> implements SortAlgo
     private long time;
     private static int[] gaps = {701, 301, 132, 57, 23, 10, 4, 1};
 
-    private void useGaps(List64<T> list) throws FileNotFoundException, IOException {
+    private void useGaps(List64<T> list) {
         for(long gap : gaps) {
             for (long i = gap; i < list.size(); i++) {
                 T temp = list.get(i);
@@ -39,12 +39,10 @@ public class CiuraShellSort<T extends Comparable<? super T>> implements SortAlgo
     }
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         useGaps(list);
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override

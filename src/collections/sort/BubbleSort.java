@@ -20,8 +20,7 @@ public class BubbleSort<T extends Comparable<? super T>>  implements SortAlgorit
     private long time;
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         boolean swapped = false;
         for(long i = 0; i < list.size(); i++) {
@@ -41,7 +40,6 @@ public class BubbleSort<T extends Comparable<? super T>>  implements SortAlgorit
             }
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override

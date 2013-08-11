@@ -1,16 +1,9 @@
 package collections.sort.benchmark;
 
 import collections.List64;
+import collections.ListFileLong;
 import collections.test.ListFactory;
-import collections.sort.BubbleSort;
-import collections.sort.CiuraShellSort;
-import collections.sort.FrankLazarusShellSort;
-import collections.sort.GonnetBaezaYatesShellSort;
-import collections.sort.HeapSort;
-import collections.sort.InsertionSort;
 import collections.sort.KnuthShellSort;
-import collections.sort.SelectionSort;
-import collections.sort.ShellSort;
 import collections.sort.SortAlgorithm;
 import collections.sort.SortBenchmark;
 import java.io.File;
@@ -82,6 +75,8 @@ public class Benchmark {
      * @return 
      */
     public AlgorithmSortResult runTests(SortAlgorithm algorithm, int size) throws FileNotFoundException, IOException {
+        
+        
         AlgorithmSortResult results = new AlgorithmSortResult();
         results.setSize(size);
         results.setTests(tests);
@@ -90,7 +85,10 @@ public class Benchmark {
         System.out.print("Random tests");
         List64<Long> list = ListFactory.getRandomList(listFile, size, false);
         for (int i = 0; i < tests; i++) {
-            List64<Long> copy = list.copy(copyFile); //uses the same list for each sort
+            List64<Long> copy = new ListFileLong(copyFile); //uses the same list for each sort
+            list.open("rw");
+            copy.open("rw");
+            copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
             System.out.print(".");
             System.out.flush();
@@ -107,7 +105,10 @@ public class Benchmark {
         System.out.print("Sorted tests");
         list = ListFactory.getSortedList(listFile, size, false);
         for (int i = 0; i < tests; i++) {
-            List64<Long> copy = list.copy(copyFile);
+            List64<Long> copy = new ListFileLong(copyFile); //uses the same list for each sort
+            list.open("rw");
+            copy.open("rw");
+            copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
             System.out.print(".");
             System.out.flush();
@@ -124,7 +125,10 @@ public class Benchmark {
         System.out.print("Reverse tests");
         list = ListFactory.getReversedList(listFile, size, false);
         for (int i = 0; i < tests; i++) {
-            List64<Long> copy = list.copy(copyFile);
+            List64<Long> copy = new ListFileLong(copyFile); //uses the same list for each sort
+            list.open("rw");
+            copy.open("rw");
+            copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
             System.out.print(".");
             System.out.flush();
@@ -141,7 +145,10 @@ public class Benchmark {
         System.out.print("Random few unique tests");
         list = ListFactory.getRandomList(listFile, size, true);
         for (int i = 0; i < tests; i++) {
-            List64<Long> copy = list.copy(copyFile);
+            List64<Long> copy = new ListFileLong(copyFile); //uses the same list for each sort
+            list.open("rw");
+            copy.open("rw");
+            copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
             System.out.print(".");
             System.out.flush();
@@ -158,7 +165,10 @@ public class Benchmark {
         System.out.print("Sorted few unique tests");
         list = ListFactory.getSortedList(listFile, size, true);
         for (int i = 0; i < tests; i++) {
-            List64<Long> copy = list.copy(copyFile);
+            List64<Long> copy = new ListFileLong(copyFile); //uses the same list for each sort
+            list.open("rw");
+            copy.open("rw");
+            copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
             System.out.print(".");
             System.out.flush();
@@ -175,7 +185,10 @@ public class Benchmark {
         System.out.print("Reverse few unique tests");
         list = ListFactory.getReversedList(listFile, size, true);
         for (int i = 0; i < tests; i++) {
-            List64<Long> copy = list.copy(copyFile);
+            List64<Long> copy = new ListFileLong(copyFile); //uses the same list for each sort
+            list.open("rw");
+            copy.open("rw");
+            copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
             System.out.print(".");
             System.out.flush();

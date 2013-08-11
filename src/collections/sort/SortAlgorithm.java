@@ -10,6 +10,6 @@ import java.io.IOException;
  * @author John Mercier <moaxcp at gmail.com>
  */
 public interface SortAlgorithm<T extends Comparable<? super T>> {
-    void sort(List64<T> list) throws FileNotFoundException, IOException;
+    void sort(List64<T> list);
     SortBenchmark getBenchmark();
 }

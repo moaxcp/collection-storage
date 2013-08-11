@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -166,18 +164,13 @@ public abstract class AbstractListFile<E> implements List64<E> {
     }
 
     @Override
-    public final long indexOf(E element, long n) {
-        long index = -1;
-        for (long i = 0, j = 0; i <= n; i++) {
-            index = -1;
-            for (; j < size(); j++) {
-                if (get(j).equals(element)) {
-                    index = j++;
-                    break;
-                }
+    public final long indexOf(E element, long start) {
+        for (long i = start; i < size(); i++) {
+            if (get(i).equals(element)) {
+                return i;
             }
         }
-        return index;
+        return -1;
     }
 
     @Override
@@ -192,15 +185,12 @@ public abstract class AbstractListFile<E> implements List64<E> {
     }
 
     @Override
-    public final List64<Long> indexAllOf(E element, File file) throws FileNotFoundException, IOException {
-        List64<Long> list = new ListFileLong(file);
-        list.open("rw");
+    public final void indexAllOf(E element, List64<E> list) {
         for (long j = 0; j < size(); j++) {
             if (get(j).equals(element)) {
-                list.add(j);
+                list.add(get(j));
             }
         }
-        return list;
     }
 
     @Override
@@ -215,15 +205,12 @@ public abstract class AbstractListFile<E> implements List64<E> {
     }
 
     @Override
-    public final List64<Long> indexAllOf(E element, Comparator<E> comparator, File file) throws FileNotFoundException, IOException {
-        List64<Long> list = new ListFileLong(file);
-        list.open("rw");
+    public final void indexAllOf(E element, Comparator<E> comparator, List64<E> list) {
         for (long j = 0; j < size(); j++) {
             if (comparator.compare(get(j), element) == 0) {
-                list.add(j);
+                list.add(get(j));
             }
         }
-        return list;
     }
 
     @Override
@@ -242,18 +229,13 @@ public abstract class AbstractListFile<E> implements List64<E> {
     }
 
     @Override
-    public long lastIndexOf(E element, long n) {
-        long index = -1;
-        for (long i = 0, j = size() - 1; i <= n; i++) {
-            index = -1;
-            for (; j >= 0; j--) {
-                if (get(j).equals(element)) {
-                    index = j--;
-                    break;
-                }
+    public long lastIndexOf(E element, long end) {
+        for (long i = end > size() - 1 ? size() - 1 : size(); i > 0; i--) {
+            if (get(i).equals(element)) {
+                return i;
             }
         }
-        return index;
+        return -1;
     }
 
     @Override

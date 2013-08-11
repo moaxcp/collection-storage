@@ -20,8 +20,7 @@ public class SelectionSort<T extends Comparable<? super T>> implements SortAlgor
      * @param list 
      */
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         for (long i = 0; i < list.size() - 1; i++) {
             long k = i;
@@ -40,7 +39,6 @@ public class SelectionSort<T extends Comparable<? super T>> implements SortAlgor
             compares++;
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     /**

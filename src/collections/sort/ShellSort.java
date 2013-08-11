@@ -20,8 +20,7 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
     private long time;
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         for(long gap = list.size() / 2; gap > 0; gap /= 2) {
             for (long i = gap; i < list.size(); i++) {
@@ -39,7 +38,6 @@ public class ShellSort<T extends Comparable<? super T>> implements SortAlgorithm
             }
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override

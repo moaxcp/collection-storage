@@ -20,8 +20,7 @@ public class GonnetBaezaYatesShellSort<T extends Comparable<? super T>> implemen
     private long time;
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         long gap = 5 * list.size() / 11;
         boolean one = false;
@@ -45,7 +44,6 @@ public class GonnetBaezaYatesShellSort<T extends Comparable<? super T>> implemen
             gap = gap * 5 / 11 < 1 ? 1 : gap * 5 / 11;
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override

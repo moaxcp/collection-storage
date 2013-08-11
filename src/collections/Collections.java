@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 John Mercier <moaxcp at gmail.com>
+ * Copyright (C) 2013 john
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,29 +15,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package collections.sort;
+package collections;
 
-import collections.List64;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import collections.sort.KnuthShellSort;
 
 /**
  *
- * @author John Mercier <moaxcp at gmail.com>
+ * @author john
  */
-public class QuickSort implements SortAlgorithm {
-    
-    private long swaps;
-    private long compares;
-    private long time;
-
-    @Override
-    public void sort(List64 list) {
-        
-    }
-
-    @Override
-    public SortBenchmark getBenchmark() {
-        return new SortBenchmark(compares, swaps, time);
+public class Collections {
+    public static <T extends Comparable<? super T>> void sort(List64<T> list) { 
+        KnuthShellSort sort = new KnuthShellSort();
+        sort.sort(list);
     }
 }

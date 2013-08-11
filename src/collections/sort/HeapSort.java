@@ -57,8 +57,7 @@ public class HeapSort<T extends Comparable<? super T>> implements SortAlgorithm<
     }
 
     @Override
-    public void sort(List64<T> list) throws FileNotFoundException, IOException {
-        list.open("rw");
+    public void sort(List64<T> list) {
         long start = System.nanoTime();
         //add each element to the heap
         heapify(list);
@@ -71,7 +70,6 @@ public class HeapSort<T extends Comparable<? super T>> implements SortAlgorithm<
             siftDown(list, 0, end);
         }
         time = System.nanoTime() - start;
-        list.close();
     }
 
     @Override
