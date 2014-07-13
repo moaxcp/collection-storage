@@ -1,11 +1,14 @@
 package collections.sort.benchmark;
 
+import collections.Collections;
 import collections.List64;
 import collections.ListFileLong;
-import collections.test.ListFactory;
+import collections.sort.DaryHeapSort;
+import collections.sort.HeapSort;
 import collections.sort.KnuthShellSort;
 import collections.sort.SortAlgorithm;
 import collections.sort.SortBenchmark;
+import collections.test.ListFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,8 +29,8 @@ public class Benchmark {
 
     public Benchmark() {
         benchmarks = new ArrayList<AlgorithmBenchmark>();
-        listFile = new File("/extra/benchmarkList");
-        copyFile = new File("/extra/benchmarkCopy");
+        listFile = new File("/home/john/benchmarkList");
+        copyFile = new File("/home/john/benchmarkCopy");
         listFile.delete();
         copyFile.delete();
     }
@@ -90,10 +93,14 @@ public class Benchmark {
             copy.open("rw");
             copy.addAll(list);
             SortBenchmark sort = runSort(algorithm, copy);
+            copy.close();
             System.out.print(".");
             System.out.flush();
             if (!ListFactory.isOrdered(copy)) {
-                throw new IllegalStateException("List is out of order for " + algorithm + " " + copy);
+                copy.open("r");
+                String msg = "List is out of order for " + algorithm + " " + Collections.toString(copy);
+                copy.close();
+                throw new IllegalStateException(msg);
             }
             results.addRandom(sort);
         }
@@ -219,10 +226,11 @@ public class Benchmark {
         List<AlgorithmBenchmark> largeBenchmarks = new ArrayList<AlgorithmBenchmark>();
         //largeBenchmarks.add(new AlgorithmBenchmark("Shell Sort", new ShellSort()));
         //largeBenchmarks.add(new AlgorithmBenchmark("Frank and Lazarus's Shell Sort", new FrankLazarusShellSort()));
-        largeBenchmarks.add(new AlgorithmBenchmark("Knuth Shell Sort", new KnuthShellSort()));
+        //largeBenchmarks.add(new AlgorithmBenchmark("Knuth Shell Sort", new KnuthShellSort()));
         //largeBenchmarks.add(new AlgorithmBenchmark("Gonnet and Baeza-Yates Shell Sort", new GonnetBaezaYatesShellSort()));
         //largeBenchmarks.add(new AlgorithmBenchmark("Ciura's Shell Sort", new CiuraShellSort()));
         //largeBenchmarks.add(new AlgorithmBenchmark("Heap Sort", new HeapSort()));
+        largeBenchmarks.add(new AlgorithmBenchmark("50ary Heap Sort", new DaryHeapSort(100)));
         for(AlgorithmBenchmark a : largeBenchmarks) {
             benchmarks.add(a);
         }

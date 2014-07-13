@@ -28,4 +28,12 @@ public class Collections {
         KnuthShellSort sort = new KnuthShellSort();
         sort.sort(list);
     }
+    
+    public static <T extends Comparable<? super T>> String toString(List64<T> list) {
+        StringBuilder sb = new StringBuilder();
+        for(long i = 0; i < list.size(); i++) {
+            sb.append(list.get(i)).append(", ");
+        }
+        return sb.toString();
+    }
 }
